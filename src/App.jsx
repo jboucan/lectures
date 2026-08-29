@@ -221,7 +221,6 @@ export default function App() {
       <div className="topbar">
         <div className="topbar-brand">Lectures</div>
         <div className="topbar-actions">
-          {loadingLibrary && <span className="save-state">chargement…</span>}
           <button className="icon-btn" onClick={reloadLibrary}>Actualiser</button>
           <button className="icon-btn" onClick={openSettings}>Réglages</button>
           <button className="icon-btn" onClick={handleLogout}>Déconnexion</button>
@@ -265,6 +264,14 @@ export default function App() {
           onCancel={() => setShowNewPaperBook(false)}
           onCreate={handleCreatePaperBook}
         />
+      )}
+
+      {loadingLibrary && (
+        <div className="loading-overlay" aria-live="polite" aria-label="Chargement des données">
+          <div className="loading-bar">
+            <div className="loading-bar-fill" />
+          </div>
+        </div>
       )}
     </div>
   )

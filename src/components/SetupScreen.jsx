@@ -3,8 +3,8 @@ import React, { useState } from 'react'
 export default function SetupScreen({ initial, onComplete, defaultRedirectUri, onCancel }) {
   const [clientId, setClientId] = useState(initial?.clientId || '')
   const [redirectUri, setRedirectUri] = useState(initial?.redirectUri || defaultRedirectUri)
-  const [koreaderFolder, setKoreaderFolder] = useState(initial?.koreaderFolder || '/Apps/koreader/highlights')
-  const [appDataFolder, setAppDataFolder] = useState(initial?.appDataFolder || '/Apps/lectures')
+  const [koreaderFolder, setKoreaderFolder] = useState(initial?.koreaderFolder || '/koreader/highlights')
+  const [appDataFolder, setAppDataFolder] = useState(initial?.appDataFolder || '/koreader/lectures')
 
   function handleSubmit(e) {
     e.preventDefault()

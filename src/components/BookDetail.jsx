@@ -181,7 +181,7 @@ export default function BookDetail({
                     {[book.title, book.author].filter(Boolean).join(' — ')}
                   </span>
                 )}
-                {entry.page && <span>p. {entry.page}</span>}
+                {entry.page && <span className="highlight-page">p.&nbsp;{entry.page}</span>}
                 {entry.date && <span>{entry.date}</span>}
                 <button
                   className="link-btn"

@@ -12,7 +12,7 @@ export default function HighlightCard({ highlight, bookTitle, bookAuthor }) {
       {highlight.note && <p className="highlight-note">{highlight.note}</p>}
       <div className="highlight-footer">
         {source && <span className="highlight-source">{source}</span>}
-        {highlight.pageno != null && <span>p. {highlight.pageno}</span>}
+        {highlight.pageno != null && <span className="highlight-page">p.&nbsp;{highlight.pageno}</span>}
       </div>
     </div>
   )
