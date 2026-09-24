@@ -107,7 +107,7 @@ function buildQuotesText(book) {
   const header = [book.title, book.author].filter(Boolean).join(' — ')
   const items = book.source === 'paper' ? book.entries : book.highlights
   const quotes = items.map((h) => h.text).filter(Boolean)
-  return `${header}\n\n${quotes.join('\n')}\n`
+  return `${header}\n\n${quotes.join('\n\n')}\n`
 }
 
 function safeFilename(name) {
