@@ -110,15 +110,19 @@ function buildQuotesText(book) {
   return `${header}\n\n${quotes.join('\n\n')}\n`
 }
 
+function withPage(text, page) {
+  return page != null && page !== '' ? `${text} (p. ${page})` : text
+}
+
 function buildQuotesMarkdown(book) {
   const header = [book.title, book.author].filter(Boolean).join(' — ')
   const lines = [`# ${header}`, '']
   if (book.source === 'paper') {
-    for (const e of book.entries) if (e.text) lines.push(e.text, '')
+    for (const e of book.entries) if (e.text) lines.push(withPage(e.text, e.page), '')
   } else {
     for (const group of groupByChapter(book.highlights)) {
       lines.push(`## ${group.label}`, '')
-      for (const h of group.items) if (h.text) lines.push(h.text, '')
+      for (const h of group.items) if (h.text) lines.push(withPage(h.text, h.pageno), '')
     }
   }
   return lines.join('\n')
