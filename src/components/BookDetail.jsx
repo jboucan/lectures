@@ -110,6 +110,20 @@ function buildQuotesText(book) {
   return `${header}\n\n${quotes.join('\n\n')}\n`
 }
 
+function buildQuotesMarkdown(book) {
+  const header = [book.title, book.author].filter(Boolean).join(' — ')
+  const lines = [`# ${header}`, '']
+  if (book.source === 'paper') {
+    for (const e of book.entries) if (e.text) lines.push(e.text, '')
+  } else {
+    for (const group of groupByChapter(book.highlights)) {
+      lines.push(`## ${group.label}`, '')
+      for (const h of group.items) if (h.text) lines.push(h.text, '')
+    }
+  }
+  return lines.join('\n')
+}
+
 function safeFilename(name) {
   return name.replace(/[\\/:*?"<>|]+/g, '_').trim() || 'citations'
 }
@@ -138,11 +152,11 @@ export default function BookDetail({
   }
 
   function handleDownload() {
-    const blob = new Blob([buildQuotesText(book)], { type: 'text/plain;charset=utf-8' })
+    const blob = new Blob([buildQuotesMarkdown(book)], { type: 'text/markdown;charset=utf-8' })
     const url = URL.createObjectURL(blob)
     const a = document.createElement('a')
     a.href = url
-    a.download = `${safeFilename([book.title, book.author].filter(Boolean).join(' - '))}.txt`
+    a.download = `${safeFilename([book.title, book.author].filter(Boolean).join(' - '))}.md`
     a.click()
     URL.revokeObjectURL(url)
   }
@@ -189,7 +203,7 @@ export default function BookDetail({
               )}
               {hasQuotes && (
                 <button className="link-btn" onClick={handleDownload}>
-                  télécharger (.txt)
+                  télécharger (.md)
                 </button>
               )}
               {isPaper && (
