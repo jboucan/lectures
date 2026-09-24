@@ -103,6 +103,17 @@ function GeneralNotes({ initialText, onSave }) {
   )
 }
 
+function buildQuotesText(book) {
+  const header = [book.title, book.author].filter(Boolean).join(' — ')
+  const items = book.source === 'paper' ? book.entries : book.highlights
+  const quotes = items.map((h) => h.text).filter(Boolean)
+  return `${header}\n\n${quotes.join('\n')}\n`
+}
+
+function safeFilename(name) {
+  return name.replace(/[\\/:*?"<>|]+/g, '_').trim() || 'citations'
+}
+
 export default function BookDetail({
   book,
   generalNote,
@@ -117,6 +128,24 @@ export default function BookDetail({
   const isPaper = book.source === 'paper'
   const [showForm, setShowForm] = useState(false)
   const [editingTitle, setEditingTitle] = useState(false)
+  const [copied, setCopied] = useState(false)
+  const hasQuotes = (isPaper ? book.entries : book.highlights).length > 0
+
+  async function handleCopy() {
+    await navigator.clipboard.writeText(buildQuotesText(book))
+    setCopied(true)
+    setTimeout(() => setCopied(false), 1500)
+  }
+
+  function handleDownload() {
+    const blob = new Blob([buildQuotesText(book)], { type: 'text/plain;charset=utf-8' })
+    const url = URL.createObjectURL(blob)
+    const a = document.createElement('a')
+    a.href = url
+    a.download = `${safeFilename([book.title, book.author].filter(Boolean).join(' - '))}.txt`
+    a.click()
+    URL.revokeObjectURL(url)
+  }
 
   async function handleAdd({ page, text, date }) {
     await onAddEntry({ id: newEntryId(), page, text, date })
@@ -151,6 +180,16 @@ export default function BookDetail({
               {!isPaper && hasTitleOverride && (
                 <button className="link-btn" onClick={onResetTitleOverride}>
                   réinitialiser
+                </button>
+              )}
+              {hasQuotes && (
+                <button className="link-btn" onClick={handleCopy}>
+                  {copied ? 'citations copiées ✓' : 'copier les citations'}
+                </button>
+              )}
+              {hasQuotes && (
+                <button className="link-btn" onClick={handleDownload}>
+                  télécharger (.txt)
                 </button>
               )}
               {isPaper && (
